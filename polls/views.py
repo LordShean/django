@@ -1,6 +1,8 @@
 from django.http import HttpResponse      #Iteration 1a 1b
 #from django.template import RequestContext, loader     #Iteration 2
 from django.shortcuts import render     #Iteration 3
+#from django.http import Http404     #404 Manager
+from django.shortcuts import get_object_or_404    #404 management 2
 from polls.models import Question
 
 
@@ -22,7 +24,16 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 def detail(request, question_id):
-    return HttpResponse("You're looking at question %s." % question_id)
+    #return HttpResponse("You're looking at question %s." % question_id)    #iteration 1
+
+    #try:                                                   #404 management 1
+    #    question = Question.objects.get(pk=question_id)
+    #except Question.DoesNotExist:
+    #    raise Http404
+    #return render(request, 'polls/detail.html', {'question': question})
+
+    question = get_object_or_404(Question, pk=question_id)    #404 management 2
+    return render(request, 'polls/detail.html', {'question': question})
 
 def results(request, question_id):
     response = "You're looking at the results of question %s."
